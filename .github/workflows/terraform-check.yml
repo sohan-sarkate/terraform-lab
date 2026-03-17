@@ -1,0 +1,49 @@
+name: Terraform Validation CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform-check:
+    name: Terraform Format, Validate and Plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        working-directory: ./day1
+
+      - name: Terraform Init (day1)
+        run: terraform init
+        working-directory: ./day1
+
+      - name: Terraform Validate (day1)
+        run: terraform validate
+        working-directory: ./day1
+
+      - name: Terraform Plan (day1)
+        run: terraform plan
+        working-directory: ./day1
+
+      - name: Terraform Init (day2)
+        run: terraform init
+        working-directory: ./day2
+
+      - name: Terraform Validate (day2)
+        run: terraform validate
+        working-directory: ./day2
+
+      - name: Terraform Plan (day2)
+        run: terraform plan -var-file="dev.tfvars"
+        working-directory: ./day2
